@@ -22,6 +22,8 @@ import { ReactComponent as SelectActiveIcon } from './assets/selectActive.svg'
 import {GetAllIncidents} from "./utils/GetAllIncidents";
 import {mapglApiKey} from "./utils/Consts";
 import FilterCard from "./components/filterCard/FilterCard";
+import RightSideBar from "./components/rightSideBar/RightSideBar";
+import BulkRightSideBar from "./components/bulkRightSideBar/BulkRightSideBar";
 
 let mapgl = window.mapgl;
 
@@ -34,10 +36,16 @@ function App() {
     const [show, setShow] = useState(false);
     const [markers, setMarkers] = useState([]);
     const [incidents, setIncidents] = useState([]);
+    const [markerObjs, setMarkerObjs] = useState([]);
     const [map, setMap] = useState(null);
 
+    const [showRight, setShowRight] = useState(false);
+    const [activeIncident, setActiveIncident] = useState({});
 
 
+    const toggleRightBar = () => {
+        setShowRight(true)
+    }
 
     useEffect(() => {
         let map = new mapgl.Map("mapContainer", {
@@ -64,7 +72,8 @@ function App() {
             markers.push({
                     "x": incident.CoordinateX,
                     "y": incident.CoordinateY,
-                    "ID": incident.ID
+                    "ID": incident.ID,
+                    "date": incident.IncidentDate,
                 })
         })
         setMarkers(markers)
@@ -75,17 +84,31 @@ function App() {
         setViewMode(1)
         setShow(false);
     }
+
+    const handleCloseRight = () => {
+        setShowRight(false);
+        setActiveIncident({})
+    }
     const handleShow = () => setShow(true);
+    const handleShowRight = () => setShowRight(true);
 
     const openLeftSideBar = (e) => {
         setViewMode(2)
         handleShow()
     }
 
+    const filterMarkers = (markers) => {
+        markerObjs && markerObjs.length && markerObjs.map((markerObj) => {
+            markerObj && markerObj.destroy()
+        })
+        setMarkers(markers)
+    }
+
+
 
   return (
       <MapContext.Provider value={map}>
-        <Map markers={markers}>
+        <Map markers={markers} setMarkerObjs={setMarkerObjs}>
           <div style={{
               position: 'absolute',
               height: '100%',
@@ -153,10 +176,10 @@ function App() {
                               {/*<Col xs={1}>*/}
 
                               {/*</Col>*/}
-                              <Col xs={10} style={{ justifyItems: 'self-end' }}>
-                                  <FilterCard />
-                              </Col>
-                              <Col xs={2} style={{ justifyItems: 'self-end' }}>
+                              {/*<Col xs={10} style={{ justifyItems: 'self-end' }}>*/}
+                                  {/*<FilterCard filterMarkers={filterMarkers} markers={markers} />*/}
+                              {/*</Col>*/}
+                              <Col xs={12} style={{ justifyItems: 'self-end' }}>
                                   <ListGroup as="ul" style={{ pointerEvents: 'all', maxWidth: '80px' }}>
                                       <ListGroup.Item value="1" onClick={(e) => setActiveTool(activeTool == "1" ? "0" : e.currentTarget.value)} as="li" style={{ cursor: 'pointer', backgroundColor:  activeTool == 1 ? '#81BE41' : '#ffffff', marginBottom: '7px', borderRadius: '10px' }}>
                                           {activeTool == 1 ? <FilterActiveIcon /> : <FilterIcon /> }
@@ -192,7 +215,9 @@ function App() {
 
                       </Col>
                   </Row>
-                  <LeftSideBar handleShow={handleShow} handleClose={handleClose} show={show} incidents={incidents} />
+                  <LeftSideBar handleShow={handleShow} handleClose={handleClose} show={show} incidents={incidents} setActiveIncident={setActiveIncident} toggleRightBar={toggleRightBar}/>
+                  <RightSideBar show={showRight} handleShow={handleShowRight} incident={activeIncident} handleClose={handleCloseRight} />
+                  <BulkRightSideBar />
               </Container>
           </div>
       </Map>

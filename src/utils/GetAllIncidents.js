@@ -1,4 +1,4 @@
-import {getAllIncidentsAPI} from "./Consts";
+import {genericAPI, getAllIncidentsAPI, getAllInspectorsAPI, getDefineViolatorsLookupAPI} from "./Consts";
 import axios from "axios";
 
 let staticToken = "eyJraWQiOiJmZDVlYmI3ZjQzZWE1YzdlYTUwMTU4YmJkN2E2MzNlZSIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJhdWQiOiJ1cm46OTc3ODE1NTY2NjQ0MjA4NjgzODgiLCJzdWIiOiI5Nzc4MTU1NjY2NDQyMDg2ODM4OCIsImFwcF9uYW1lIjoiQ0lTIiwibmJmIjoxNzMzMzM5OTk5LCJhcHBfdmVyc2lvbiI6IjAxLjAxLjAzIiwiaXNzIjoidXJuOm1jcHN0Zy5tb21yYWguZ292LnNhIiwiZXhwIjoxNzMzMzQzNTk5LCJpYXQiOjE3MzMzMzk5OTksImp0aSI6ImZhYzkyMmNiM2ZiNGE1NzBkZGUwNTg1Mzk4NjFiODA1Iiwib3BlcmF0b3JfYWNjZXNzIjoiQ0lTOkludGVyZmFjZSJ9.SY0U5jpn_aDGQTbZrHC0diRf4KH8YhTHmdUzdBbaZ8XWTpexSgY7epvN8tTruCjsbiyAyXLpgDhPTPX0WgbfztZ_CDWNCJqTUTPjdAsnU0m-YfFmqpPK7ZC0OkuN21zT1C4rNg0WU_WRVR2jbzBZUokZqAi6cgBRumXqbqr88GR-seRR-CGlUY4itrR5U1SgcC6hdRUgceJX28suKmXfbDIHAIcuiOiouTVUQT2Uyy3Fu32r1EhpzJfCD24Rk6Y6PrrPjqC3hiaR5G1dZ0hJCG4HG-XyCKY8ujteFa6_B3mkR6sjz8CwxbEv8I80KXx7MDNzf79tg_8bg7qcuOM7cg1z7zyLHwFU4Y6PlqMr4VVyWy_FKMn99Dy8hFeJbXNRIW8pmeV1_yNSY433svODGKv_UQv9g8ixohCXVDOCYhzi10BxsPxyMe1OGe4VnidOfvgkMWY_dXnF4PXTUSpZHdEQiIf6i2KPvEuSfNlh_hIwRPW9nJ-dffXlMaWgrqwoYf-5qiqm8Cwzy2KsKTwTdFEWL-DYG_T2nsB8qyX_LS6kmZksw9PALJegeqrLsR6Pt277Z_dIFopoGr9z-5N3bfHo6tKSi6GrPfiRIrmUqs43Hu0zW0GMjbtX4GRM9ORU5rgsIMmWy4dzncoROM3MhjmTwzbx5lzToVTOzUbjZZs"
@@ -2324,6 +2324,151 @@ let staticRes = {
     "StatusCode": "CIS-200",
     "StatusMessage": "Fetched Incidents Successfully"
 }
+
+let staticInspectors = {
+    "StatusCode": "CIS-200",
+    "InspectorsList": [
+        {
+            "pyUserIdentifier": "1038015002",
+            "pyLabel": "بدر عليثه على القاضى"
+        }
+    ],
+    "StatusMessage": "Details Fetched Successfully"
+}
+
+let staticDefineViolatorLookup = {
+    "ViolatorTypeList": [
+        {
+            "DOBList": [
+                {
+                    "ID": "1",
+                    "value": "التقويم الهجري"
+                },
+                {
+                    "ID": "2",
+                    "value": "التقويم الميلادي"
+                }
+            ],
+            "ID": "001",
+            "value": "هوية وطنية"
+        },
+        {
+            "DOBList": [
+                {
+                    "ID": "1",
+                    "value": "التقويم الهجري"
+                },
+                {
+                    "ID": "2",
+                    "value": "التقويم الميلادي"
+                }
+            ],
+            "ID": "002",
+            "value": "إقامة"
+        },
+        {
+            "ID": "004",
+            "value": "رقم المنشأة الوطني"
+        },
+        {
+            "VehicleIDTypeList": [
+                {
+                    "ID": "001",
+                    "value": "رقم هيكل السيارة"
+                },
+                {
+                    "RegistrationList": [
+                        {
+                            "ID": "1",
+                            "value": "خاص"
+                        },
+                        {
+                            "ID": "2",
+                            "value": "نقل عام"
+                        },
+                        {
+                            "ID": "3",
+                            "value": "نقل خاص"
+                        },
+                        {
+                            "ID": "4",
+                            "value": "حافلة صغيرة عامة"
+                        },
+                        {
+                            "ID": "5",
+                            "value": "حافلة صغيرة عامة"
+                        },
+                        {
+                            "ID": "6",
+                            "value": "أجرة"
+                        },
+                        {
+                            "ID": "7",
+                            "value": "أشغال عامة"
+                        },
+                        {
+                            "ID": "8",
+                            "value": "تصدير"
+                        },
+                        {
+                            "ID": "9",
+                            "value": "دبلوماسي"
+                        },
+                        {
+                            "ID": "10",
+                            "value": "دراجة آلية"
+                        },
+                        {
+                            "ID": "11",
+                            "value": "مؤقت"
+                        }
+                    ],
+                    "ID": "002",
+                    "value": "رقم لوحة السيارة",
+                    "VehiclePlateText": [
+                        "أ",
+                        "ب",
+                        "ح",
+                        "د",
+                        "ر",
+                        "س",
+                        "ص",
+                        "ط",
+                        "ع",
+                        "ق",
+                        "ك",
+                        "ل",
+                        "م",
+                        "ن",
+                        "هـ",
+                        "و",
+                        "ي"
+                    ]
+                }
+            ],
+            "ID": "005",
+            "value": "لوحة سيارة"
+        }
+    ],
+    "StatusCode": "200",
+    "StatusMessage": "Details Fetched Successfully",
+    "LicenseTypeList": [
+        {
+            "ID": "Commercial",
+            "value": "رخصة تجارية"
+        },
+        {
+            "ID": "Construction",
+            "value": "رخصة إنشائية"
+        },
+        {
+            "ID": "Drilling",
+            "value": "تصريح حفر"
+        }
+    ]
+}
+
+
 export const GetAllIncidents = async () => {
     const response = await axios.get(getAllIncidentsAPI, {
         headers: {
@@ -2339,3 +2484,58 @@ export const GetAllIncidents = async () => {
     // throw new Error('Error getting data');
     return response.json();
 };
+
+
+export const GetAllInspectors = async () => {
+    const response = await axios.get(getAllInspectorsAPI, {
+        headers: {
+            'Authorization': `Bearer ${staticToken}`
+        }
+    }).catch((err) => {
+        return staticInspectors
+    });
+
+    if (!response.ok){
+        return staticInspectors
+    }
+    // throw new Error('Error getting data');
+    return response.json();
+}
+
+
+export const GetDefineViolatorsLookup = async () => {
+    const response = await axios.get(getDefineViolatorsLookupAPI, {
+        headers: {
+            'Authorization': `Bearer ${staticToken}`
+        }
+    }).catch((err) => {
+        return staticDefineViolatorLookup
+    });
+
+    if (!response.ok){
+        return staticDefineViolatorLookup
+    }
+    // throw new Error('Error getting data');
+    return response.json();
+}
+
+
+export const pushToCIS = async (incidentId, assignedInspector) => {
+    const response = await axios.post(genericAPI, {
+            "ActionType" : "Push Incidents To CIS",
+            "AssignedInspector" : assignedInspector,
+            "SelectedIncidents" : [  incidentId  ]
+        }, {
+        headers: {
+            'Authorization': `Bearer ${staticToken}`
+        }
+    }).catch((err) => {
+        return staticInspectors
+    });
+
+    if (!response.ok){
+        return staticInspectors
+    }
+    // throw new Error('Error getting data');
+    return response.json();
+}

@@ -6,20 +6,38 @@ import {MapContext} from "../../App";
 import Accordion from 'react-bootstrap/Accordion';
 
 
-function FilterCard({incident, handleClose}) {
+function FilterCard({filterMarkers, markers}) {
+    const [filter, setFilter] = useState({});
+    const [dateFilter, setDateFilter] = useState("");
+
     const map = useContext(MapContext);
 
+    const addDateFilter = (e) => {
+        setDateFilter(e.target.value)
+    }
+
+    const applyFilter = () => {
+        let filteredMarkers = []
+        markers && markers.map((marker) => {
+            let incidentDate = Date.parse(marker.date)
+            let filterDate = Date.parse(dateFilter)
+            if (dateFilter && marker && marker.date && incidentDate < filterDate) {
+                filteredMarkers.push(marker)
+            }
+        })
+        filterMarkers(filteredMarkers)
+    }
 
 
     return (
-        <div style={{ pointerEvents: 'all' }}>
-            <Card>
+        <div style={{pointerEvents: 'all'}}>
+            <Card style={{minWidth: '300px'}}>
                 <Card.Header>
                     <Row>
                         <Col>
                             تصفية
                         </Col>
-                        <Col style={{ justifyItems: 'self-end' }}>
+                        <Col style={{justifyItems: 'self-end'}}>
                             <div>
                                 <label>الغاء</label>
                             </div>
@@ -27,12 +45,12 @@ function FilterCard({incident, handleClose}) {
                     </Row>
                 </Card.Header>
                 <Card.Body>
-                    <Form style={{ direction: 'rtl' }}>
+                    <Form style={{direction: 'rtl'}}>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>التاريخ</Form.Label>
-                            <Form.Control style={{ direction: 'rtl' }} type="date" placeholder="Enter email" className="rtl" />
+                            <Form.Control onChange={addDateFilter} style={{direction: 'rtl'}} type="date"
+                                          placeholder="Enter email" className="rtl"/>
                         </Form.Group>
-
 
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -47,7 +65,7 @@ function FilterCard({incident, handleClose}) {
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>البلدية</Form.Label>
-                            <Form.Control type="text" placeholder="البلدية" />
+                            <Form.Control type="text" placeholder="البلدية"/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -74,18 +92,18 @@ function FilterCard({incident, handleClose}) {
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header>وضع الكشف</Accordion.Header>
                                 <Accordion.Body>
-                                    <div style={{ display: 'flex' }}>
+                                    <div style={{display: 'flex'}}>
                                         <Form.Check // prettier-ignore
                                             type={"checkbox"}
                                             id={`default-${"checkbox"}`}
                                             label={`AI`}
-                                            style={{ marginLeft: '5px' }}
+                                            style={{marginLeft: '5px'}}
                                         />
                                         <Form.Check // prettier-ignore
                                             type={"checkbox"}
                                             id={`default-${"checkbox"}`}
                                             label={`يدوي`}
-                                            style={{ marginRight: '5px' }}
+                                            style={{marginRight: '5px'}}
                                         />
                                     </div>
                                 </Accordion.Body>
@@ -97,7 +115,7 @@ function FilterCard({incident, handleClose}) {
                                         type={"checkbox"}
                                         id={`default-${"checkbox"}`}
                                         label={`عدسة بلدي`}
-                                        style={{ marginRight: '5px' }}
+                                        style={{marginRight: '5px'}}
                                     />
                                 </Accordion.Body>
                             </Accordion.Item>
@@ -105,14 +123,13 @@ function FilterCard({incident, handleClose}) {
                     </Form>
                 </Card.Body>
                 <Card.Footer>
-
-                    <div style={{ display: 'flex' }}>
-                            <Button variant="primary" type="submit">
-                                تطبيق
-                            </Button>
-                            <Button variant="primary" type="submit">
-                                الغاء
-                            </Button>
+                    <div style={{display: 'flex'}}>
+                        <Button onClick={applyFilter} variant="primary" type="submit">
+                            تطبيق
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            الغاء
+                        </Button>
                     </div>
                 </Card.Footer>
             </Card>

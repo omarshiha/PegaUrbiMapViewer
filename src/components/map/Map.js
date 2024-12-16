@@ -9,6 +9,7 @@ export function Map(props) {
 
     useEffect(() => {
 
+        let markerObjs = []
         map && props.markers && props.markers.length > 0 && props.markers.map((marker) => {
             let markerObj = new mapgl.Marker(map, {
                 coordinates: [marker.x, marker.y],
@@ -17,7 +18,9 @@ export function Map(props) {
             markerObj.on('click', () => {
                 console.log(marker)
             })
+            markerObjs.push(markerObj)
         })
+        props.setMarkerObjs && props.setMarkerObjs(markerObjs)
 
     }, [props.markers, map]);
 

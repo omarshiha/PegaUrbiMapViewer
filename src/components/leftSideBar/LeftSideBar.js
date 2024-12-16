@@ -5,8 +5,25 @@ import {Col, Container, Form, Row} from "react-bootstrap";
 import { ReactComponent as FilterIcon } from '../../assets/filter.svg'
 import {GetAllIncidents} from "../../utils/GetAllIncidents";
 import GenericIncidentCard from "../genericIncidentCard/GenericIncidentCard";
+import RightSideBar from "../rightSideBar/RightSideBar";
 
-function LeftSideBar({show, handleClose, incidents}) {
+function LeftSideBar({show, handleClose, incidents, setActiveIncident, toggleRightBar}) {
+    // const [activeIncident, setActiveIncident] = useState({});
+    const [showRight, setShowRight] = useState(false);
+
+    const handleShow = () => setShowRight(true);
+
+    const openIncidentDetails = (incident) => {
+        handleClose()
+        toggleRightBar()
+        setActiveIncident(incident)
+        setShowRight(true)
+    }
+
+    const handleCloseRight = () => {
+        handleClose()
+        setShowRight(false);
+    }
 
     return (
         <>
@@ -24,6 +41,7 @@ function LeftSideBar({show, handleClose, incidents}) {
                                         name="group1"
                                         type={'radio'}
                                         id={`inline-radio-1`}
+                                        disabled={true}
                                     />
                                     <Form.Check
                                         inline
@@ -64,7 +82,7 @@ function LeftSideBar({show, handleClose, incidents}) {
                         <Col>
                             {incidents && incidents.length > 0 && incidents.map((incident) => {
                                 return(
-                                    <GenericIncidentCard handleClose={handleClose} incident={incident} />
+                                    <GenericIncidentCard handleClose={handleClose} incident={incident} openIncidentDetails={openIncidentDetails} />
                                 )
                             })}
                         </Col>
@@ -78,6 +96,7 @@ function LeftSideBar({show, handleClose, incidents}) {
                 {/*    have chosen. Like, text, images, lists, etc.*/}
                 {/*</Offcanvas.Body>*/}
             </Offcanvas>
+            {/*<RightSideBar show={showRight} handleShow={handleShow} incident={activeIncident} handleClose={handleCloseRight} />*/}
         </>
     );
 }
