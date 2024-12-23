@@ -224,7 +224,9 @@ function App() {
                   </Row>
                   <LeftSideBar handleShow={handleShow} handleClose={handleClose} show={show} incidents={incidents} setActiveIncident={setActiveIncident} toggleRightBar={toggleRightBar}/>
                   <RightSideBar show={showRight} handleShow={handleShowRight} incident={activeIncident} handleClose={handleCloseRight} />
-                  <BulkRightSideBar show={showRightBulk} handleShow={handleShowRightBulk} handleClose={handleCloseBulk} incidents={incidents} />
+                  {/*{showRightBulk &&*/}
+                      <BulkRightSideBar show={showRightBulk} handleShow={handleShowRightBulk} handleClose={handleCloseBulk} incidents={incidents} />
+                  {/*}*/}
               </Container>
           </div>
       </Map>
