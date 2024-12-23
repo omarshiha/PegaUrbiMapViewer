@@ -40,6 +40,7 @@ function App() {
     const [map, setMap] = useState(null);
 
     const [showRight, setShowRight] = useState(false);
+    const [showRightBulk, setShowRightBulk] = useState(false);
     const [activeIncident, setActiveIncident] = useState({});
 
 
@@ -85,12 +86,18 @@ function App() {
         setShow(false);
     }
 
+    const handleCloseBulk = () => {
+        setViewMode(1)
+        setShowRightBulk(false);
+    }
+
     const handleCloseRight = () => {
         setShowRight(false);
         setActiveIncident({})
     }
     const handleShow = () => setShow(true);
     const handleShowRight = () => setShowRight(true);
+    const handleShowRightBulk = () => setShowRightBulk(true);
 
     const openLeftSideBar = (e) => {
         setViewMode(2)
@@ -209,7 +216,7 @@ function App() {
                           </Card>
                       </Col>
                       <Col className="d-flex flex-column justify-content-center align-items-center" style={{ justifyItems: 'center'}}>
-                          <Button className="mt-auto" style={{ backgroundColor: '#02776D', color: '#fff', width: '160px', pointerEvents: 'all' }}>اسناد</Button>
+                          <Button onClick={handleShowRightBulk} className="mt-auto" style={{ backgroundColor: '#02776D', color: '#fff', width: '160px', pointerEvents: 'all' }}>اسناد</Button>
                       </Col>
                       <Col className="mb-3" style={{ justifyItems: 'self-end' }}>
 
@@ -217,7 +224,7 @@ function App() {
                   </Row>
                   <LeftSideBar handleShow={handleShow} handleClose={handleClose} show={show} incidents={incidents} setActiveIncident={setActiveIncident} toggleRightBar={toggleRightBar}/>
                   <RightSideBar show={showRight} handleShow={handleShowRight} incident={activeIncident} handleClose={handleCloseRight} />
-                  <BulkRightSideBar />
+                  <BulkRightSideBar show={showRightBulk} handleShow={handleShowRightBulk} handleClose={handleCloseBulk} incidents={incidents} />
               </Container>
           </div>
       </Map>

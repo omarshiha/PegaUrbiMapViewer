@@ -39,7 +39,6 @@ function DefineViolator() {
         setCardType(type)
     }
 
-
     return (
         <>
                     <Container fluid className="d-flex flex-column" style={{ height: '100vh', marginTop: '15px' }}>
