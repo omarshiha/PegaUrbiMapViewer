@@ -49,6 +49,7 @@ function LeftSideBar({show, handleClose, incidents, setActiveIncident, toggleRig
                                         name="group1"
                                         type={'radio'}
                                         id={`inline-radio-2`}
+                                        checked={true}
                                     />
                                 </div>
                         </Col>
@@ -69,11 +70,11 @@ function LeftSideBar({show, handleClose, incidents, setActiveIncident, toggleRig
                         <Col>
                             <Form>
                                     <div key={`default-checkbox`} className="mb-3">
-                                        <Form.Check // prettier-ignore
-                                            type={'checkbox'}
-                                            id={`default-checkbox`}
-                                            label={`تحديد الكل`}
-                                        />
+                                        {/*<Form.Check // prettier-ignore*/}
+                                        {/*    type={'checkbox'}*/}
+                                        {/*    id={`default-checkbox`}*/}
+                                        {/*    label={`تحديد الكل`}*/}
+                                        {/*/>*/}
                                     </div>
                             </Form>
                         </Col>

@@ -1,4 +1,10 @@
-import {genericAPI, getAllIncidentsAPI, getAllInspectorsAPI, getDefineViolatorsLookupAPI} from "./Consts";
+import {
+    genericAPI,
+    getAllIncidentsAPI,
+    getAllInspectorsAPI,
+    getDefineViolatorsLookupAPI, getUpdateClassificationLookupAPI,
+    getWrongIncidentLookupAPI, performActionAPI
+} from "./Consts";
 import axios from "axios";
 
 let staticToken = "eyJraWQiOiJmZDVlYmI3ZjQzZWE1YzdlYTUwMTU4YmJkN2E2MzNlZSIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJhdWQiOiJ1cm46OTc3ODE1NTY2NjQ0MjA4NjgzODgiLCJzdWIiOiI5Nzc4MTU1NjY2NDQyMDg2ODM4OCIsImFwcF9uYW1lIjoiQ0lTIiwibmJmIjoxNzMzMzM5OTk5LCJhcHBfdmVyc2lvbiI6IjAxLjAxLjAzIiwiaXNzIjoidXJuOm1jcHN0Zy5tb21yYWguZ292LnNhIiwiZXhwIjoxNzMzMzQzNTk5LCJpYXQiOjE3MzMzMzk5OTksImp0aSI6ImZhYzkyMmNiM2ZiNGE1NzBkZGUwNTg1Mzk4NjFiODA1Iiwib3BlcmF0b3JfYWNjZXNzIjoiQ0lTOkludGVyZmFjZSJ9.SY0U5jpn_aDGQTbZrHC0diRf4KH8YhTHmdUzdBbaZ8XWTpexSgY7epvN8tTruCjsbiyAyXLpgDhPTPX0WgbfztZ_CDWNCJqTUTPjdAsnU0m-YfFmqpPK7ZC0OkuN21zT1C4rNg0WU_WRVR2jbzBZUokZqAi6cgBRumXqbqr88GR-seRR-CGlUY4itrR5U1SgcC6hdRUgceJX28suKmXfbDIHAIcuiOiouTVUQT2Uyy3Fu32r1EhpzJfCD24Rk6Y6PrrPjqC3hiaR5G1dZ0hJCG4HG-XyCKY8ujteFa6_B3mkR6sjz8CwxbEv8I80KXx7MDNzf79tg_8bg7qcuOM7cg1z7zyLHwFU4Y6PlqMr4VVyWy_FKMn99Dy8hFeJbXNRIW8pmeV1_yNSY433svODGKv_UQv9g8ixohCXVDOCYhzi10BxsPxyMe1OGe4VnidOfvgkMWY_dXnF4PXTUSpZHdEQiIf6i2KPvEuSfNlh_hIwRPW9nJ-dffXlMaWgrqwoYf-5qiqm8Cwzy2KsKTwTdFEWL-DYG_T2nsB8qyX_LS6kmZksw9PALJegeqrLsR6Pt277Z_dIFopoGr9z-5N3bfHo6tKSi6GrPfiRIrmUqs43Hu0zW0GMjbtX4GRM9ORU5rgsIMmWy4dzncoROM3MhjmTwzbx5lzToVTOzUbjZZs"
@@ -2519,16 +2525,71 @@ export const GetDefineViolatorsLookup = async () => {
     return response.json();
 }
 
+export const GetWrongIncidentLookup = async () => {
+    const response = await axios.get(getWrongIncidentLookupAPI, {
+        headers: {
+            'Authorization': `Bearer ${staticToken}`
+        }
+    }).then((res) => {
+        return res.data
+    }).catch((err) => {
+        return staticDefineViolatorLookup
+    });
+
+    // if (!response.ok){
+    //     return staticDefineViolatorLookup
+    // }
+    // // throw new Error('Error getting data');
+    return response;
+}
+
+export const GetUpdateClassificationLookup = async () => {
+    const response = await axios.get(getUpdateClassificationLookupAPI, {
+        headers: {
+            'Authorization': `Bearer ${staticToken}`
+        }
+    }).then((res) => {
+        return res.data
+    }).catch((err) => {
+        return staticDefineViolatorLookup
+    });
+
+    // if (!response.ok){
+    //     return staticDefineViolatorLookup
+    // }
+    // // throw new Error('Error getting data');
+    return response;
+}
+
 
 export const pushToCIS = async (incidentId, assignedInspector) => {
     const response = await axios.post(genericAPI, {
             "ActionType" : "Push Incidents To CIS",
             "AssignedInspector" : assignedInspector,
-            "SelectedIncidents" : [  incidentId  ]
+            "SelectedIncidents" : Array.isArray(incidentId) ? incidentId : [  incidentId  ]
         }, {
         headers: {
             'Authorization': `Bearer ${staticToken}`
         }
+    }).catch((err) => {
+        return staticInspectors
+    });
+
+    if (!response.ok){
+        return staticInspectors
+    }
+    // throw new Error('Error getting data');
+    return response.json();
+}
+
+
+export const performAction = async (payload) => {
+    const response = await axios.post(performActionAPI, payload, {
+        headers: {
+            'Authorization': `Bearer ${staticToken}`
+        }
+    }).then((res) => {
+        return res;
     }).catch((err) => {
         return staticInspectors
     });

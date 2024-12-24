@@ -1,17 +1,23 @@
 import {useEffect, useState} from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import {Card, Col, Container, Form, ListGroup, Row, Table} from "react-bootstrap";
+import {Alert, Card, Col, Container, Form, ListGroup, Row, Table} from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import {GetAllInspectors} from "../../utils/GetAllIncidents";
-
+import {GetAllInspectors, pushToCIS} from "../../utils/GetAllIncidents";
+import Button from "react-bootstrap/Button";
+import { ReactComponent as EditIcon } from '../../assets/editIcon.svg'
+import { ReactComponent as SendIcon } from '../../assets/sendIcon.svg'
+import { ReactComponent as DislikeIcon } from '../../assets/dislike.svg'
 
 
 function BulkRightSideBar({show, handleClose, incidents}) {
     const [key, setKey] = useState('1');
     const [cardType, setCardType] = useState('1');
     const [selectedIncidents, setSelectedIncidents] = useState([]);
+    const [selectedInspectors, setSelectedInspectors] = useState([]);
     const [inspectors, setInspectors] = useState([]);
+    const [errors, setErrors] = useState("");
+    const [errors1, setErrors1] = useState("");
     const [activeInspector, setActiveInspector] = useState("");
 
     useEffect( () => {
@@ -19,7 +25,21 @@ function BulkRightSideBar({show, handleClose, incidents}) {
         const fetchData = async () => {
             const data = await GetAllInspectors()
             console.log(data)
-            setInspectors(data.InspectorsList)
+
+            setInspectors( [
+                        {
+                            "pyLabel": "بدر محمد على",
+                            "pyUserIdentifier": "103801222"
+                        },
+                        {
+                            "pyLabel": "بدر عليثه على القاضى",
+                            "pyUserIdentifier": "1038015002"
+                        },
+                        {
+                            "pyLabel": "احمد على القاضى",
+                            "pyUserIdentifier": "1038015003"
+                        }
+                ])
 
         }
         fetchData()
@@ -34,14 +54,59 @@ function BulkRightSideBar({show, handleClose, incidents}) {
         setCardType(type)
     }
 
-    const handleIncidentSelection = (checked) => {
-        if(checked === true){
-            selectedIncidents.push();
-            setSelectedIncidents(selectedIncidents)
+    const handleIncidentSelection = (e) => {
+        let {checked} = e.target;
+        let {id} = e.target;
+        let incidentIndex = incidents.findIndex((incident) => incident.ID == id)
+        if(incidentIndex != -1){
+            if(checked === true){
+                selectedIncidents.push(incidents[incidentIndex]);
+                setSelectedIncidents([...selectedIncidents])
+            }
+            if(checked === false){
+                let selectedIncidentIndex = selectedIncidents.findIndex((incident) => incident.ID == id)
+                selectedIncidents.splice(selectedIncidentIndex, 1);
+                setSelectedIncidents([...selectedIncidents])
+            }
         }
-        if(checked === false){
-            selectedIncidents.push();
-            setSelectedIncidents(selectedIncidents)
+    }
+
+    const submit = () => {
+        if(selectedInspectors.length == 0){
+            setErrors("اختر علي الاقل مراقب واحد")
+        }else{
+            setErrors("")
+        }
+        if(selectedIncidents.length == 0){
+            setErrors1("اختر علي الاقل بلاغ واحد")
+        }else{
+            setErrors1("")
+        }
+        if(!selectedIncidents.length || !selectedInspectors.length){
+            return;
+        }
+
+        let csvs = selectedIncidents && selectedIncidents.map((selectedIncident) => {
+            return selectedIncident.ID
+        })
+        pushToCIS(csvs, "aaa")
+    }
+
+    const calculateIncidentAge = (IncidentDate) => {
+
+    }
+
+    const handleInspectors = (userId) => {
+        let inspectorIndex = inspectors.findIndex((inspector) => inspector.pyUserIdentifier == userId)
+        if(inspectorIndex != -1){
+        if(selectedInspectors.find((selectedInspector) => selectedInspector.pyUserIdentifier == userId)){
+            let selectedInspectorIndex = selectedInspectors.findIndex((selectedInspector) => selectedInspector.pyUserIdentifier == userId)
+            selectedInspectors.splice(selectedInspectorIndex, 1);
+            setSelectedInspectors([...selectedInspectors])
+        } else if(!selectedInspectors.find((selectedInspector) => selectedInspector.pyUserIdentifier == userId)){
+                selectedInspectors.push(inspectors[inspectorIndex]);
+                setSelectedInspectors([...selectedInspectors])
+            }
         }
     }
 
@@ -58,6 +123,7 @@ function BulkRightSideBar({show, handleClose, incidents}) {
                                    <label className="header">
                                        اسناد البلاغات الي
                                    </label>
+                                   {" "}
                                    <Form.Check
                                        inline
                                        label="CRM"
@@ -72,6 +138,7 @@ function BulkRightSideBar({show, handleClose, incidents}) {
                                        name="group1"
                                        type={'radio'}
                                        id={`inline-radio-2`}
+                                       checked={true}
                                    />
                                </div>
                            </Col>
@@ -102,15 +169,16 @@ function BulkRightSideBar({show, handleClose, incidents}) {
                           </Col>
                           <Col xs={9}>
                               {cardType == 1 && (
-                                  <div style={{ maxHeight: "85vh", overflow: 'scroll' }}>
+                                  <>
+                                  <div style={{ maxHeight: "70vh", overflowY: 'scroll' }}>
                                       <Table striped bordered hover>
                                           <thead>
                                           <tr>
                                               <th>
-                                                  <Form.Check // prettier-ignore
-                                                      type={"checkbox"}
-                                                      id={`default-${"checkbox"}`}
-                                                  />
+                                                  {/*<Form.Check // prettier-ignore*/}
+                                                  {/*    type={"checkbox"}*/}
+                                                  {/*    id={`default-${"checkbox"}`}*/}
+                                                  {/*/>*/}
                                               </th>
                                               <th>رمز البلاغ</th>
                                               <th>البلدية</th>
@@ -129,10 +197,12 @@ function BulkRightSideBar({show, handleClose, incidents}) {
                                                       <td>
                                                           <Form.Check // prettier-ignore
                                                               type={"checkbox"}
-                                                              id={`default-${"checkbox"}`}
+                                                              id={incident.ID}
+                                                              onClick={handleIncidentSelection}
+                                                              checked={selectedIncidents.find((selectedIncident) => selectedIncident.ID == incident.ID)}
                                                           />
                                                       </td>
-                                                      <td>{incident.ClassificationID}</td>
+                                                      <td>{incident.ExternalChannelIncidentID}</td>
                                                       <td>{incident.SubMunicipalityName}</td>
                                                       <td>{incident.ClassificationName}</td>
                                                       <td>{incident.ExternalChannelName}</td>
@@ -146,21 +216,69 @@ function BulkRightSideBar({show, handleClose, incidents}) {
                                           </tbody>
                                       </Table>
                                   </div>
+                                  </>
                               )}
                               {cardType == 2 && (
                                   <ListGroup defaultActiveKey="#link1">
                                       {inspectors && inspectors.length && inspectors.map((inspector) => {
+                                          let selected = selectedInspectors.find((selectedInspector) => selectedInspector.pyUserIdentifier == inspector.pyUserIdentifier)
                                           return(
-                                              <ListGroup.Item style={{ borderColor: inspector.pyUserIdentifier == activeInspector ? "#02776D" : "" }} action onClick={() => setActiveInspector(inspector.pyUserIdentifier)}>
+                                              <ListGroup.Item style={{ marginTop: '10px',borderWidth: '2px', borderColor: selected ? "#02776D" : "" }} action onClick={() => handleInspectors(inspector.pyUserIdentifier)}>
                                                   {inspector.pyLabel}
                                               </ListGroup.Item>
                                           )
                                       })}
-
                                   </ListGroup>
                               )}
                           </Col>
                       </Row>
+                        <br />
+                        <br />
+                        <Row>
+                            <Col xs={3}>
+
+                            </Col>
+                            <Col xs={9}>
+                                <Row>
+                                    <Col xs={6}>
+                                        <Button onClick={submit} style={{ backgroundColor: '#03766e', width: '150px', borderColor: '#fff'}} >
+                                            <SendIcon />
+                                            اسناد
+                                        </Button>
+                                        {" "}
+                                        <label style={{ marginTop: '4px' }}>
+                                            <DislikeIcon />
+                                        </label>
+                                        <label style={{ color: '#BD271E', textDecoration: 'underline', fontSize: '18px'}}>
+                                            بلاغ غير صحيح
+                                        </label>
+                                    </Col>
+                                    <Col className="d-flex justify-content-end" xs={6}>
+                                        <Button onClick={handleClose} style={{ backgroundColor: '#fff', width: '150px', borderColor: '#e5e7ea', color: '#1F2A37'}} >
+                                            الغاء
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        {errors &&
+                                            <>
+                                                <Alert key={"danger"} variant={"danger"}>
+                                                    {errors}
+                                                </Alert>
+                                            </>
+                                        }
+                                        {errors1 &&
+                                            <>
+                                                <Alert key={"danger"} variant={"danger"}>
+                                                    {errors1}
+                                                </Alert>
+                                            </>
+                                        }
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
                     </Container>
                 </Offcanvas>
             </>

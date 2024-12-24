@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import {Card, Col, Container, Form, Row} from "react-bootstrap";
+import {Badge, Card, Col, Container, FloatingLabel, Form, Row} from "react-bootstrap";
 import { ReactComponent as FilterIcon } from '../../assets/filter.svg'
 import {GetAllIncidents} from "../../utils/GetAllIncidents";
 import {MapContext} from "../../App";
@@ -27,13 +27,56 @@ function GenericIncidentCard({incident, handleClose, openIncidentDetails}) {
                     <div style={{ flex: '0 0 200px' }}>
                         <Card.Img src={mockImage} alt="Card image" />
                     </div>
-                    <div className="p-3">
-                        <Card.Body>
-                            <Row>
+                    <div className="p-3" style={{ width: '100%' }}>
+                        <Card.Body style={{ width: '100%' }}>
+                            <Row style={{ width: '100%' }}>
                                 <Col xs={11}>
-                                    <Card.Title>{incident.ID}</Card.Title>
+                                    {/*<Card.Title>{incident.ID}</Card.Title>*/}
                                     <Card.Text>
-                                        This is a description of the card content. You can add more text or components here.
+                                        <Row>
+                                            <Col xs={3}>
+                                                <Badge pill style={{ paddingLeft: '10px', paddingRight: '10px' }} bg="success">
+                                                    <label>
+                                                        {incident.IncidentDate}
+                                                    </label>
+                                                </Badge>
+                                            </Col>
+                                            <Col xs={4}>
+                                                <Badge pill style={{ paddingLeft: '10px', paddingRight: '10px' }} bg="success">
+                                                    <label>
+                                                        {incident.MunicipalityName}
+                                                    </label>
+                                                </Badge>
+                                            </Col>
+                                            <Col xs={3}>
+                                                <Badge pill style={{ paddingLeft: '10px', paddingRight: '10px' }} bg="success">
+                                                    <label>
+                                                        {incident.ExternalChannelName}
+                                                    </label>
+                                                </Badge>
+                                            </Col>
+                                        </Row>
+                                        <br/>
+                                        <Row>
+                                            <Col xs={6}>
+                                                <FloatingLabel style={{ fontSize: '14px' }}>
+                                                    <a style={{ color: '#989898' }}>التصنيف الرئيسي:</a>
+                                                    {incident.MainClassificationName}
+                                                </FloatingLabel>
+                                            </Col>
+                                            <Col xs={6}>
+                                                <FloatingLabel style={{ fontSize: '14px' }}>
+                                                    <a style={{ color: '#989898' }}>التصنيف الفرعي:</a>
+                                                    {incident.ClassificationName}
+                                                </FloatingLabel>
+                                            </Col>
+                                        </Row>
+                                        <br/>
+                                        <Row>
+                                            <Col>
+                                                {incident.SubMunicipalityName}
+                                            </Col>
+                                        </Row>
                                     </Card.Text>
                                     {/*<Button variant="primary" onClick={goToIncident}>اذهب الي الحادث</Button>*/}
                                 </Col>

@@ -69,12 +69,21 @@ function App() {
         let res = await GetAllIncidents()
         setIncidents(res.IncidentList)
         let markers = []
+        // let municipalities = []
+        // let subMunicipalities = []
         res.IncidentList && res.IncidentList.map((incident) => {
+            // if(!municipalities.includes(incident.MunicipalityID)){
+            //     municipalities.push(incident.MunicipalityID)
+            // }
+            // if(!subMunicipalities.includes(incident.SubMunicipalityID)){
+            //     subMunicipalities.push(incident.SubMunicipalityID)
+            // }
             markers.push({
                     "x": incident.CoordinateX,
                     "y": incident.CoordinateY,
                     "ID": incident.ID,
                     "date": incident.IncidentDate,
+                    ...incident
                 })
         })
         setMarkers(markers)
@@ -115,7 +124,7 @@ function App() {
 
   return (
       <MapContext.Provider value={map}>
-        <Map markers={markers} setMarkerObjs={setMarkerObjs}>
+        <Map markers={markers} setMarkerObjs={setMarkerObjs} setActiveIncident={setActiveIncident} toggleRightBar={toggleRightBar}>
           <div style={{
               position: 'absolute',
               height: '100%',
@@ -161,11 +170,11 @@ function App() {
                           <h1 className="header" style={{ pointerEvents: 'all' }}>
                               <ButtonGroup className="mb-2">
                               <InputGroup>
-                                  <InputGroup.Text style={{ borderColor: '#ffffff00', backgroundColor: '#fff' }}>
+                                  <InputGroup.Text style={{ borderColor: '#ffffff00', backgroundColor: '#fff', borderRadius: '0px 20px 20px 0px' }}>
                                       <Search1Icon />
                                   </InputGroup.Text >
                                   <FormControl
-                                      style={{ borderColor: '#ffffff00', backgroundColor: '#fff' }}
+                                      style={{ borderColor: '#ffffff00', backgroundColor: '#fff', borderRadius: '20px 0px 0px 20px' }}
                                       placeholder="البحث"
                                       aria-label="Search"
                                   />
@@ -180,13 +189,16 @@ function App() {
                       </Col>
                       <Col style={{ justifyItems: 'self-end' }}>
                           <Row>
-                              {/*<Col xs={1}>*/}
+                              <Col xs={1}>
 
-                              {/*</Col>*/}
-                              {/*<Col xs={10} style={{ justifyItems: 'self-end' }}>*/}
-                                  {/*<FilterCard filterMarkers={filterMarkers} markers={markers} />*/}
-                              {/*</Col>*/}
-                              <Col xs={12} style={{ justifyItems: 'self-end' }}>
+                              </Col>
+                              <Col xs={9} style={{ justifyItems: 'self-end' }}>
+                                  {activeTool == 1 &&
+                                      <FilterCard filterMarkers={filterMarkers} markers={markers} />
+                                  }
+
+                              </Col>
+                              <Col xs={2} style={{ justifyItems: 'self-end' }}>
                                   <ListGroup as="ul" style={{ pointerEvents: 'all', maxWidth: '80px' }}>
                                       <ListGroup.Item value="1" onClick={(e) => setActiveTool(activeTool == "1" ? "0" : e.currentTarget.value)} as="li" style={{ cursor: 'pointer', backgroundColor:  activeTool == 1 ? '#81BE41' : '#ffffff', marginBottom: '7px', borderRadius: '10px' }}>
                                           {activeTool == 1 ? <FilterActiveIcon /> : <FilterIcon /> }
@@ -216,17 +228,21 @@ function App() {
                           </Card>
                       </Col>
                       <Col className="d-flex flex-column justify-content-center align-items-center" style={{ justifyItems: 'center'}}>
-                          <Button onClick={handleShowRightBulk} className="mt-auto" style={{ backgroundColor: '#02776D', color: '#fff', width: '160px', pointerEvents: 'all' }}>اسناد</Button>
+                          <Button onClick={handleShowRightBulk} className="mt-auto" style={{ backgroundColor: '#02776D', color: '#fff', width: '160px', pointerEvents: 'all', borderColor: '#ffffff' }}>اسناد</Button>
                       </Col>
                       <Col className="mb-3" style={{ justifyItems: 'self-end' }}>
 
                       </Col>
                   </Row>
                   <LeftSideBar handleShow={handleShow} handleClose={handleClose} show={show} incidents={incidents} setActiveIncident={setActiveIncident} toggleRightBar={toggleRightBar}/>
-                  <RightSideBar show={showRight} handleShow={handleShowRight} incident={activeIncident} handleClose={handleCloseRight} />
-                  {/*{showRightBulk &&*/}
+                  {
+                      showRight &&
+                      <RightSideBar show={showRight} handleShow={handleShowRight} incident={activeIncident} handleClose={handleCloseRight} />
+                  }
+
+                  {showRightBulk &&
                       <BulkRightSideBar show={showRightBulk} handleShow={handleShowRightBulk} handleClose={handleCloseBulk} incidents={incidents} />
-                  {/*}*/}
+                  }
               </Container>
           </div>
       </Map>
